@@ -1,13 +1,19 @@
 package models;
 
 
-public abstract class Personnage {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Personnage {
     private String nom;
-    private int niveau, experience, vieMax, vieAct, manaMax, manaAct, force, intelligence, defense, defenseMagique;
+    private int niveau, vieMax, vieAct, manaMax, manaAct, force, intelligence, defense, defenseMagique;
+    private int experience;
+    private List<Sort> sorts;
 
     public Personnage(){
         niveau = 1;
         experience = 0;
+        sorts = new ArrayList<>();
     }
 
     public Personnage(String nom, int force, int intelligence, int defense, int defenseMagique){
@@ -41,14 +47,6 @@ public abstract class Personnage {
 
     public void setNiveau(int niveau) {
         this.niveau = niveau;
-    }
-
-    public int getExperience() {
-        return experience;
-    }
-
-    public void setExperience(int experience) {
-        this.experience = experience;
     }
 
     public int getVieMax() {
@@ -115,6 +113,14 @@ public abstract class Personnage {
         this.defenseMagique = defenseMagique;
     }
 
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
     public void prendreDegat(int montant){
         vieAct -= montant;
     }
@@ -137,11 +143,33 @@ public abstract class Personnage {
         return 0;
     }
 
-    public boolean fuire(){
+    public boolean fuir(){
         int rand = (int)Math.floor(Math.random() * 100) + 1; // nombre entre 1 et 100
-
         return rand <= 30;
     }
 
+    public void gagnerForce(int force){
+        this.force += force;
+        vieMax = this.force * 5;
+    }
+
+    public void gagnerIntelligence(int intelligence){
+        this.intelligence += intelligence;
+        manaMax = this.intelligence * 5;
+    }
+
+    public void gagnerNiveau(){
+        niveau++;
+    }
+
+    public boolean gagnerExperience(int experience){
+        this.experience += experience;
+        if(this.experience >= 4+(niveau*3)){
+            this.experience = this.experience - (4+(niveau*3));
+            gagnerNiveau();
+            return true;
+        }
+        return false;
+    }
 
 }
